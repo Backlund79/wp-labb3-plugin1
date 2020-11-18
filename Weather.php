@@ -30,8 +30,11 @@ include 'env/api.php';
     $temp = floor($weather_data->{'main'}->{'temp'});
     $country = $weather_data->{'sys'}->{'country'};
     $feels_like = floor($weather_data->{'main'}->{'feels_like'});
-?>
 
+/**
+* Print to the Dom
+ */
+ ?>
 <style>
     .icon {
         height: 100px;
