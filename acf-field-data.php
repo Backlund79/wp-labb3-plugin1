@@ -9,33 +9,12 @@ add_action('acf/init', 'weather_data_options');
     {
         acf_add_options_page('Weather Data');
     }
-
     if (function_exists('acf_add_local_field_group')):
 
       acf_add_local_field_group(array(
         'key' => 'group_5fb62b2608efd',
         'title' => 'Weather Data',
         'fields' => array(
-          array(
-            'key' => 'field_5fb62d9c0ad71',
-            'label' => 'City',
-            'name' => 'city',
-            'type' => 'text',
-            'instructions' => 'This plugin only works on major cities in Sweden. 
-      Enter City name in english.',
-            'required' => 0,
-            'conditional_logic' => 0,
-            'wrapper' => array(
-              'width' => '',
-              'class' => '',
-              'id' => '',
-            ),
-            'default_value' => '',
-            'placeholder' => '',
-            'prepend' => '',
-            'append' => '',
-            'maxlength' => '',
-          ),
           array(
             'key' => 'field_5fb62b2e5a7a7',
             'label' => 'Add to product page',

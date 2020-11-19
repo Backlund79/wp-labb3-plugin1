@@ -7,15 +7,11 @@
 include_once 'env/api.php';
 require 'acf-field-data.php';
 
-
-
 /**
 * The Weather API
 * api.openweathermap.org/data/2.5/weather?q={city name}&units=metric&appid={API key}&lang=sv
 *
 */
-
-
     $apiUrl ='https://api.openweathermap.org/data/2.5/weather?q=Gothenburg&units=metric&appid='.$apikey.'&lang=sv';
     $weather_data = get_transient('weather');
     
@@ -34,7 +30,8 @@ require 'acf-field-data.php';
 
 /**
 * Print to the Dom
-
+*/
+?>
 <style>
     .icon {
         height: 100px;
@@ -58,4 +55,3 @@ require 'acf-field-data.php';
     <span style="font-size: 2rem;"><?php echo $temp; ?>°C Känns som
         <?php echo $feels_like ?>°C </span>
 </div>
-*/
