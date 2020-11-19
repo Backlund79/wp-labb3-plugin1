@@ -7,31 +7,53 @@
 include_once 'env/api.php';
 require 'acf-field-data.php';
 
-/**
-* The Weather API
-* api.openweathermap.org/data/2.5/weather?q={city name}&units=metric&appid={API key}&lang=sv
-*
-*/
-    $apiUrl ='https://api.openweathermap.org/data/2.5/weather?q=Gothenburg&units=metric&appid='.$apikey.'&lang=sv';
-    $weather_data = get_transient('weather');
-    
-        if (false === $weather_data) {
-            $response = wp_remote_get($apiUrl);
-            $responseBody = wp_remote_retrieve_body($response);
-            $result = json_decode($responseBody);
-            set_transient('weather', $result, HOUR_IN_SECONDS);
-        }
-    $description = $weather_data->{'weather'}[0]->{'description'};
-    $city = $weather_data->{'name'};
-    $icon = $weather_data->{'weather'}[0]->{'icon'};
-    $temp = floor($weather_data->{'main'}->{'temp'});
-    $country = $weather_data->{'sys'}->{'country'};
-    $feels_like = floor($weather_data->{'main'}->{'feels_like'});
+$object_weather = new Weather_app('https://api.openweathermap.org/data/2.5/weather?q=Gothenburg&units=metric&appid='.$apikey.'&lang=sv');
 
-/**
-* Print to the Dom
-*/
-?>
+add_action('template_redirect', array($object_weather, 'print_weather_to_dom'));
+
+class Weather_app
+{
+    public $apiUrl;
+    public $weather_data;
+    public $description;
+    public $city;
+    public $icon;
+    public $temp;
+    public $country;
+    public $feels_like;
+    public $response;
+    public $responseBody;
+    public $result;
+
+    public function __construct($apiUrl)
+    {
+        $this->apiUrl = $apiUrl;
+        self::check_transient();
+    }
+
+    public function check_transient()
+    {
+        $this->weather_data = get_transient('weather');
+
+        if (false === $this->weather_data) {
+            $this->response = wp_remote_get($this->apiUrl);
+            $this->responseBody = wp_remote_retrieve_body($this->response);
+            $this->result = json_decode($this->responseBody);
+            set_transient('weather', $this->result, HOUR_IN_SECONDS);
+        }
+
+        $this->description = $this->weather_data->{'weather'}[0]->{'description'};
+        $this->city = $this->weather_data->{'name'};
+        $this->icon = $this->weather_data->{'weather'}[0]->{'icon'};
+        $this->temp = floor($this->weather_data->{'main'}->{'temp'});
+        $this->country = $this->weather_data->{'sys'}->{'country'};
+        $this->feels_like = floor($this->weather_data->{'main'}->{'feels_like'});
+    }
+    public function print_weather_to_dom()
+    {
+        if (is_cart()) {
+            ?>
+
 <style>
     .icon {
         height: 100px;
@@ -46,12 +68,18 @@ require 'acf-field-data.php';
 </style>
 
 <div>
-    Vädret i <?php echo $city; ?>, <?php echo $country ?>. <b>Idag är det <?php echo $description; ?></b>
+    Vädret i <?php echo $this->city; ?>, <?php echo $this->country ?>. <b>Idag är det <?php echo $this->description; ?></b>
 </div>
 <div class="icon">
     <span><img
-            src="http://openweathermap.org/img/wn/<?php echo $icon .'.png' ?>"
+            src="http://openweathermap.org/img/wn/<?php echo $this->icon .'.png' ?>"
             alt="" srcset=""></span>
-    <span style="font-size: 2rem;"><?php echo $temp; ?>°C Känns som
-        <?php echo $feels_like ?>°C </span>
+    <span style="font-size: 2rem;"><?php echo $this->temp; ?>°C Känns
+        som
+        <?php echo $this->feels_like ?>°C </span>
 </div>
+
+<?php
+        }
+    }
+}
