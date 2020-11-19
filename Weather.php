@@ -4,9 +4,10 @@
 * Author: Emil
 */
 
-include 'env/api.php';
+include_once 'env/api.php';
+require 'acf-field-data.php';
 
-// $apikey = key in api.php
+
 
 /**
 * The Weather API
@@ -33,8 +34,7 @@ include 'env/api.php';
 
 /**
 * Print to the Dom
- */
- ?>
+
 <style>
     .icon {
         height: 100px;
@@ -58,3 +58,4 @@ include 'env/api.php';
     <span style="font-size: 2rem;"><?php echo $temp; ?>°C Känns som
         <?php echo $feels_like ?>°C </span>
 </div>
+*/
