@@ -24,6 +24,7 @@ class Weather_app
     public $response;
     public $responseBody;
     public $result;
+    public $from_acf_options;
 
     public function __construct($apiUrl)
     {
@@ -48,10 +49,11 @@ class Weather_app
         $this->temp = floor($this->weather_data->{'main'}->{'temp'});
         $this->country = $this->weather_data->{'sys'}->{'country'};
         $this->feels_like = floor($this->weather_data->{'main'}->{'feels_like'});
+        $this->from_acf_options = get_field('where_to_show_weather', 'options');
     }
     public function print_weather_to_dom()
     {
-        if (is_cart()) {
+        if (call_user_func($this->from_acf_options)) {
             ?>
 
 <style>
